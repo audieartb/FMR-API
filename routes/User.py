@@ -67,6 +67,8 @@ def get_user_by_id(id):
 
     return Response(response, mimetype='application/json')
 
+
+
 @users_api.route('/users/<id>', methods=['DELETE'])
 def delete_user(id):
     mongo = PyMongo(current_app)
@@ -74,6 +76,7 @@ def delete_user(id):
     if(mongo.db.users.find_one({'_id':ObjectId(id)})):
         
         mongo_resp = mongo.db.users.delete_one({'_id':ObjectId(id)})
+
         return Response(status=200)
     else:
         error_msg = json_util.dumps({
@@ -97,10 +100,12 @@ def update_user():
             'avatar': _json['avatar_uri'],
             'bio': _json['bio']
         }})
-        
+
         return Response(status=200)
     else:
         error_msg = json_util.dumps({
             'error': 'user does not exist'
         })
         return Response(error_msg, status=404)
+
+
