@@ -1,7 +1,7 @@
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from bson import json_util
-from flask import jsonify, Blueprint, request, Response, jsonify, json
+from flask import jsonify, Blueprint, request, Response, jsonify
 from Database.CRUD import CRUD
 
 
@@ -52,7 +52,7 @@ def update_user(id):
     
     if(not request.json):
         return Response(json.dumps({'invalid request - json is empty'}), status=400)
-        
+
     data = request.json
 
     action = CRUD(collection='restaurants')

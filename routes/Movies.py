@@ -1,55 +1,59 @@
 from flask import request, Flask, Blueprint, Response, current_app as app
 from flask_pymongo import PyMongo
-
+from Database.CRUD import CRUD
 
 movies_api = Blueprint('movies_api', __name__)
 
-@movies_api.route('/movies', methods=['GET'])
+@movies_api.route('/movies', methods=['POST'])
+def insert_user():
+
+    if(not request.json):
+        return Response(json.dumps({'invalid request - json is empty'}), status=400)
+
+    action = CRUD(collection='movies')
+
+    resp =  action.insert(request.json)
+    
+    return Response(resp, status=200, mimetype='application/json')
+   
+
+
+@movies_api.route('/movies',methods=['GET'])
 def get_movies():
 
+    action = CRUD(collection='movies')
+    response = action.get_all()
+    return response
     
-    return {'message':f'get'}
-    # data = mongo.db.users.find()
-    # print(data)
-    # return Response(data, mimetype='application/json')
+
+@movies_api.route('/movies/<id>',methods=['GET'])
+def get_user_by_id(id):
+
+    action  = CRUD(collection='movies')
+    response = action.get_one(id)
+    return response
 
 
-@movies_api.route('/movies/<id>', methods=['GET'])
-def get_movie_by_id(id):
 
-    # movie_data.id = id
-    # data = movie_data.get_by_id()
+@movies_api.route('/movies/<id>', methods=['DELETE'])
+def delete_user(id):
+   
+    action = CRUD(collection='movies')
 
-    return {'message':f'get by id : {id}'}
+    response = action.delete(id)
 
-@movies_api.route('/movies', methods=['POST'])
-def insert_movie():
+    return response
+
+@movies_api.route('/movies/<id>', methods=['PUT'])
+def update_user(id):
     
-    
-    post_data = {
-        'username' : request.form['username'],
-        'email' : request.form['email'],
-        'password' : request.form['password']
-    }
+    if(not request.json):
+        return Response(json.dumps({'invalid request - json is empty'}), status=400)
+        
+    data = request.json
 
-    con = app.app_context()
+    action = CRUD(collection='movies')
 
-    mongo = PyMongo(con['MONGO_URI'])
-    data = mongo.db.users.insert_one(post_data)
+    mongo_resp = action.update(data= data, id = id)
 
-    return Response(data, mimetype='application/json')
-
-
-@movies_api.route('/movies/<id>',methods=['PUT'])
-def update_movie(id):
-
-    title = request.form['title']
-    length = request.form['length']
-
-    return {'message':f'update movie {id}, title: {title}, {length}'}
-
-
-@movies_api.route('/movies', methods=['DELETE'])
-def delete_movie(id):
-
-    return {}
+    return mongo_resp

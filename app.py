@@ -8,12 +8,12 @@ app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py', silent=True)
 mongo = PyMongo(app)
 
-app.register_blueprint(movies_api, url_prefix='/movies')
+app.register_blueprint(movies_api, url_prefix='/api')
 app.register_blueprint(restaurants_api, url_prefix='/api')
 app.register_blueprint(users_api, url_prefix='/api')
 
 
-@app.route('/health')
+@app.route('/health', methods=['GET'])
 def health():
    return jsonify(alive=True)
 
