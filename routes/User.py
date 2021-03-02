@@ -101,7 +101,7 @@ def update_user():
             'bio': _json['bio']
         }})
 
-        return Response(status=200)
+        return mongo_resp
     else:
         error_msg = json_util.dumps({
             'error': 'user does not exist'
