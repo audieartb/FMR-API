@@ -2,8 +2,9 @@ from flask_pymongo import MongoClient
 from bson import json_util
 from bson.objectid import ObjectId
 from flask import Flask,Response
+from db import mongourl
 
-mongo = MongoClient('mongodb+srv://audie-artavia:newmongopass@clustersc-609.ucywa.gcp.mongodb.net/Jumanji?retryWrites=true&w=majority')
+mongo = MongoClient(mongourl)
 database = mongo['Jumanji']
 
 
