@@ -18,9 +18,11 @@ class CRUD():
 
 
     def get_one(self, id):
-
+        
         collection = db[self.__collection]
-        mongo_resp = collection.find_one_or_404({'_id':ObjectId(id)})
+        mongo_resp = collection.find_one({'_id':ObjectId(id)})
+        if(not mongo_resp):
+            return Response(status=404)
         json_resp = json_util.dumps(mongo_resp)
         return Response(json_resp, status=200, mimetype='application/json')
 
