@@ -1,5 +1,5 @@
-## Favorite Movies and Restaurants - (FMR)
-# Developed by Audie Artavia
+# Favorite Movies and Restaurants - (FMR)
+### Developed by Audie Artavia
 
 This is a small restfull API for a mongodb database using flask, it has been containerized using docker and nginx.
 It is functional with a basic CRUD to users, movies and restaurante, more features will be implemented like:
