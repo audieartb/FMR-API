@@ -1,8 +1,11 @@
 from flask import request, Flask, Blueprint, Response, current_app as app
 from flask_pymongo import PyMongo
-from ..Database.CRUD import CRUD
+from ..DataAccess.CRUD import CRUD
 
 movies_api = Blueprint('movies_api', __name__)
+
+
+
 
 @movies_api.route('/movies', methods=['POST'])
 def insert_user():
@@ -12,17 +15,18 @@ def insert_user():
 
     action = CRUD(collection='movies')
 
-    resp =  action.insert(request.json)
+    response =  action.insert(request.json)
     
-    return Response(resp, status=200, mimetype='application/json')
+    return response
    
-
 
 @movies_api.route('/movies',methods=['GET'])
 def get_movies():
 
     action = CRUD(collection='movies')
+    
     response = action.get_all()
+
     return response
     
 
@@ -30,9 +34,10 @@ def get_movies():
 def get_user_by_id(id):
 
     action  = CRUD(collection='movies')
+   
     response = action.get_one(id)
-    return response
 
+    return response
 
 
 @movies_api.route('/movies/<id>', methods=['DELETE'])
@@ -44,6 +49,7 @@ def delete_user(id):
 
     return response
 
+
 @movies_api.route('/movies/<id>', methods=['PUT'])
 def update_user(id):
     
@@ -54,6 +60,6 @@ def update_user(id):
 
     action = CRUD(collection='movies')
 
-    mongo_resp = action.update(data= data, id = id)
+    response = action.update(data= data, id = id)
 
-    return mongo_resp
+    return response

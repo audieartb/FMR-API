@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, g
 import logging as logger
-from .routes import users_api, movies_api, restaurants_api
+from .Routes import users_api, movies_api, restaurants_api
 from flask_pymongo import PyMongo
 logger.basicConfig(level="DEBUG")
 
@@ -19,4 +19,4 @@ def create_app():
    def health():
       return jsonify(alive=True)
 
-   return app
+   return app 

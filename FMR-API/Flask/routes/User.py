@@ -5,7 +5,7 @@ from bson import json_util
 import logging
 from flask import jsonify, Blueprint, request, current_app, Response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..Database.CRUD import CRUD
+from ..DataAccess.User_DA import User
 
 users_api = Blueprint('users_api', __name__)
 
@@ -23,7 +23,7 @@ def insert_user():
 
     request.json['password'] = pass_hash
     print(request.json)
-    action = CRUD(collection='users')
+    action = User(collection='users')
 
     response =  action.insert(request.json)
     
@@ -32,7 +32,7 @@ def insert_user():
 @users_api.route('/users',methods=['GET'])
 def get_users():
 
-    action = CRUD(collection='users')
+    action = User(collection='users')
     response = action.get_all()
     return response
     
@@ -40,13 +40,13 @@ def get_users():
 @users_api.route('/users/<id>',methods=['GET'])
 def get_user_by_id(id):
 
-    action  = CRUD(collection='users')
+    action  = User(collection='users')
     response = action.get_one(id)
     return response
 
 @users_api.route('/users/<id>', methods=['DELETE'])
 def delete_user(id):
-    action = CRUD(collection='users')
+    action = User(collection='users')
 
     response = action.delete(id)
 
@@ -59,7 +59,7 @@ def update_user(id):
     _json = request.json
     
     if(not request.json):
-        return Response(json.dumps({'invalid request - json is empty'}), status=400)
+        return Response(json_util.dumps({'invalid request - json is empty'}), status=400)
         
     data = {
         'username' : _json['username'],
@@ -68,17 +68,32 @@ def update_user(id):
         'bio': _json['bio']
     }
 
-    action = CRUD(collection='users')
+    action = User(collection='users')
 
-    mongo_resp = action.update(data= data, id = id)
+    response = action.update(data= data, id = id)
 
-    return mongo_resp
+    return response
 
 
-@users_api.route('/passwordchange/<id>', methods=['PUT'])
-def update_password(id):
-    pass
-
-@users_api.route('/authenticate', methods=['GET'])
+@users_api.route('/users/authenticate', methods=['POST'])
 def authenticate_user():
-    pass
+    
+    action = User(collection='users')
+
+    response = action.verify_password(
+        email =request.form['email'], 
+        password = request.form['password'])
+    
+    return response
+
+@users_api.route('/users/passchange',methods=['POST'])
+def change_password():
+
+    action = User(collection='users')
+
+    response = action.change_password(
+        email =request.form['email'], 
+        password = request.form['password']
+    )
+
+    return response

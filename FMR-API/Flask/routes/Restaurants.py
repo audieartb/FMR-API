@@ -2,9 +2,11 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 from bson import json_util
 from flask import jsonify, Blueprint, request, Response, jsonify
-from ..Database.CRUD import CRUD
+from ..DataAccess.CRUD import CRUD
 
 restaurants_api = Blueprint('restaurants_api', __name__)
+
+
 
 @restaurants_api.route('/restaurants', methods=['POST'])
 def insert_user():
@@ -14,17 +16,18 @@ def insert_user():
 
     action = CRUD(collection='restaurants')
 
-    resp =  action.insert(request.json)
+    response =  action.insert(request.json)
     
-    return Response(resp, status=200, mimetype='application/json')
+    return response
    
-
 
 @restaurants_api.route('/restaurants',methods=['GET'])
 def get_restaurants():
 
     action = CRUD(collection='restaurants')
+
     response = action.get_all()
+
     return response
     
 
@@ -32,19 +35,21 @@ def get_restaurants():
 def get_user_by_id(id):
 
     action  = CRUD(collection='restaurants')
+    
     response = action.get_one(id)
+   
     return response
-
 
 
 @restaurants_api.route('/restaurants/<id>', methods=['DELETE'])
 def delete_user(id):
    
     action = CRUD(collection='restaurants')
-
+    
     response = action.delete(id)
 
     return response
+
 
 @restaurants_api.route('/restaurants/<id>', methods=['PUT'])
 def update_user(id):
@@ -56,7 +61,7 @@ def update_user(id):
 
     action = CRUD(collection='restaurants')
 
-    mongo_resp = action.update(data= data, id = id)
+    response = action.update(data= data, id = id)
 
-    return mongo_resp
+    return response
 
